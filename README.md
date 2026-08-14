@@ -75,9 +75,6 @@ Both training and inference use identical preprocessing: reflect-pad to a square
 `src/preprocessing.py` and reused by every entry point (training dataloaders, batch evaluation,
 and Grad-CAM) to avoid train/inference skew.
 
-## License
-
-Choose and add a license (MIT is a common default for portfolio ML projects) — see `LICENSE`.
 
 ## Acknowledgements
 
