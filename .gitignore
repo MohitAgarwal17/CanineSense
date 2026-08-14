@@ -1,0 +1,10 @@
+# Ignore model binaries
+models/
+
+# Ignore virtual environment and Python cache
+.venv/
+__pycache__/
+*.py[cod]
+
+# Ignore output images
+*.jpg
