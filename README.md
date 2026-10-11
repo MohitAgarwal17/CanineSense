@@ -1,4 +1,4 @@
-# Dog Emotion Recognition
+# CanineSense - A Dog Emotion Recognition Model
 
 A two-stage computer vision pipeline that first checks whether an image contains a dog, then
 classifies the dog's emotion (angry / happy / relaxed / sad), and explains the prediction with
