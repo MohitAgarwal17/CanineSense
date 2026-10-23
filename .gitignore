@@ -1,6 +1,8 @@
 # Ignore model binaries
 models/
 
+.idea/
+
 # Ignore virtual environment and Python cache
 .venv/
 __pycache__/
