@@ -19,6 +19,23 @@ IMG_SIZE = 400
 IMAGENET_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 IMAGENET_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
 
+def _fit_dims(w: int, h: int, size: int) -> tuple[int, int]:
+    """Size of the photo after scaling its longer side to `size` (before padding)."""
+    scale = size / max(w, h)
+    return max(1, int(w * scale)), max(1, int(h * scale))
+
+
+def content_box(orig_size: tuple[int, int], size: int = IMG_SIZE) -> tuple[int, int, int, int]:
+    """(left, top, right, bottom) of the real photo inside the padded size x size image.
+
+    Everything outside this box is mirrored padding, not real image content.
+    Uses the same arithmetic as pad_to_square_resize.
+    """
+    w, h = orig_size
+    new_w, new_h = _fit_dims(w, h, size)
+    left, top = (size - new_w) // 2, (size - new_h) // 2
+    return left, top, left + new_w, top + new_h
+
 
 def pad_to_square_resize(img: Image.Image, size: int = IMG_SIZE) -> Image.Image:
     """Reflect-pad an image to a square, then resize.
@@ -27,8 +44,7 @@ def pad_to_square_resize(img: Image.Image, size: int = IMG_SIZE) -> Image.Image:
     which both models were trained with.
     """
     w, h = img.size
-    scale = size / max(w, h)
-    new_w, new_h = max(1, int(w * scale)), max(1, int(h * scale))
+    new_w, new_h = _fit_dims(w, h, size)
     img_resized = img.resize((new_w, new_h), Image.BILINEAR)
 
     pad_w, pad_h = size - new_w, size - new_h
@@ -38,7 +54,6 @@ def pad_to_square_resize(img: Image.Image, size: int = IMG_SIZE) -> Image.Image:
     arr = np.array(img_resized)
     arr = np.pad(arr, ((top, bottom), (left, right), (0, 0)), mode="reflect")
     return Image.fromarray(arr)
-
 
 def load_and_preprocess(image_path, size: int = IMG_SIZE):
     """Load an image from disk and return (raw_np_0to1, normalized_tensor).

@@ -40,5 +40,6 @@ def run_prediction(image_path: str):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python test_setup.py \"path/to/image.jpg\"")
+
     else:
         run_prediction(sys.argv[1])

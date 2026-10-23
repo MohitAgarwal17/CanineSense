@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from .dog_or_not import predict_dog_or_not
 from .emotion import get_learner, predict_emotion
-from .gradcam_utils import explain_gradcam, generate_gradcam
+from .gradcam_utils import explain_gradcam, generate_gradcam, get_content_box
 
 
 def predict(image_path, explain: bool = True) -> dict:
@@ -36,7 +36,10 @@ def predict(image_path, explain: bool = True) -> dict:
         grayscale_cam, visualization, _ = generate_gradcam(
             image_path, learn, emotion_result["class_idx"]
         )
-        explanation, grid_pct = explain_gradcam(grayscale_cam, emotion_result["emotion"])
+        box = get_content_box(image_path)  # where the real photo sits inside the padded input
+        explanation, grid_pct = explain_gradcam(
+            grayscale_cam, emotion_result["emotion"], content_box=box
+        )
         result["gradcam_heatmap"] = grayscale_cam
         result["gradcam_visualization"] = visualization
         result["explanation"] = explanation
